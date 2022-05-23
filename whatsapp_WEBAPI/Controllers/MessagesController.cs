@@ -48,12 +48,13 @@ namespace whatsapp_WEBAPI.Controllers
         {
             var postResult = await _messagesService.PostMessage(message, id, user);
 
+
             if(postResult == -1)
             {
                 return NotFound();
             }
 
-            return CreatedAtAction("GetMessage", new { id = message.Id }, message);
+            return CreatedAtAction("GetMessages", new { id = message.Id }, message);
 
         }
 
@@ -107,6 +108,7 @@ namespace whatsapp_WEBAPI.Controllers
             var fromContact = transfer.from;
             var toUser = transfer.to;
             var transferResult = await _messagesService.postTransfer(transfer);
+
             if (transferResult == null)
             {
                 return NotFound();
@@ -114,7 +116,7 @@ namespace whatsapp_WEBAPI.Controllers
 
             await _myHub.Clients.Groups(toUser).SendAsync("ReceiveMessage");
 
-            return CreatedAtAction("GetMessage", new { id = transferResult.Id }, transferResult);
+            return CreatedAtAction("GetMessages", new { id = transferResult.Id }, transferResult);
 
 
         }
